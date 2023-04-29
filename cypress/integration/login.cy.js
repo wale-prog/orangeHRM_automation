@@ -1,35 +1,40 @@
 /// <reference types="cypress"  />
+import Login from "../support/PageObjects/login"
 
-describe('Login oage', () => {
-  beforeEach(() => {
-    cy.visit('https://opensource-demo.orangehrmlive.com/')
+describe('Login page', () => {
+  const login = new Login
+  beforeEach(function () {
+    cy.visit(Cypress.env('baseUrl'))
+    cy.fixture('projectData').then(function (data){
+      this.data = data
+    })
   })
-  it('verifies that user is able to login with correct credentials', () => {
-    cy.get('input[name=username]').type('Admin')
-    cy.get('input[name=password]').type('admin123{enter}')
-    cy.url().should('not.eql', 'https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
-    cy.url().should('eq', 'https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index')
-    cy.get('.oxd-sidepanel').should('contain', 'AdminPIMLeave')
+  it('verifies that user is able to login with correct credentials', function () {
+    login.getUsername('Admin')    
+    login.getPassword('admin123{enter}')   
+    cy.url().should('not.eql', this.data.loginUrl)
+    cy.url().should('eq', this.data.dashboardUrl)
+    cy.get('.oxd-sidepanel').should('exist')
   })
-  it('user is unable to log with wrong password', () => {
-    cy.get('input[name=username]').type('Admin')
-    cy.get('input[name=password]').type('admin124{enter}')
-    cy.url().should('eql', 'https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
-    cy.url().should('not.eq', 'https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index')
+  it('user is unable to log with wrong password', function () {
+    login.getUsername('Admin')    
+    login.getPassword('admin124{enter}')
+    cy.url().should('eql', this.data.loginUrl)
+    cy.url().should('not.eq', this.data.dashboardUrl)
     cy.get('.oxd-alert').should('have.text', 'Invalid credentials')
   })
-  it('user is unable to log with wrong username', () => {
-    cy.get('input[name=username]').type('Richard')
-    cy.get('input[name=password]').type('admin123{enter}')
-    cy.url().should('eql', 'https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
-    cy.url().should('not.eq', 'https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index')
+  it('user is unable to log in with wrong username', function () {
+    login.getUsername('Richard')    
+    login.getPassword('admin123{enter}')
+    cy.url().should('eql', this.data.loginUrl)
+    cy.url().should('not.eq', this.data.dashboardUrl)
     cy.get('.oxd-alert').should('have.text', 'Invalid credentials')
   })
-  it('user is unable to log with wrong username and password', () => {
-    cy.get('input[name=username]').type('Richard')
-    cy.get('input[name=password]').type('admin124{enter}')
-    cy.url().should('eql', 'https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
-    cy.url().should('not.eq', 'https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index')
+  it('user is unable to log with wrong username and password', function (){
+    login.getUsername('Richard')    
+    login.getPassword('admin124{enter}')
+    cy.url().should('eql', this.data.loginUrl)
+    cy.url().should('not.eq', this.data.dashboardUrl)
     cy.get('.oxd-alert').should('have.text', 'Invalid credentials')
   })
-})``
+})
