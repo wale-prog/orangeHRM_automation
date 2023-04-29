@@ -32,9 +32,9 @@ This is a demo project to automate login scenarios of a publicly accessible webs
   - node modules with npm install 
 
 
-## Authors
+## Author
 
-👤 **Wale Olapetan**
+👤 **Olawale Olapetan**
 
 - GitHub: [@wale-prog](https://github.com/wale-prog)
 - Twitter: [@Wale_Petan](https://twitter.com/wale_Petan)
